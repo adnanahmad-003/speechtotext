@@ -1,0 +1,95 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speechtotext</title>
+    <!-- https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition -->
+    <!-- new webkitSpeechRecognition() || new SpeechRecognition()-->
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+
+        form * {
+            width: 50%;
+        }
+
+        textarea {
+            height: 250px;
+            background-color: rgb(236, 208, 171);
+            border: 2px solid #333; /* Set the border properties */
+               border-radius: 10px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+        .btn{
+            width: 60px;
+            margin:3px;
+            padding: 3px;
+            background-color: black;
+            color: white;
+            border: 2px solid #333; /* Set the border properties */
+              border-radius: 10px;
+            
+        }
+        .btn:hover{
+            background-color: rgb(128, 123, 123);
+        }
+        .title{
+            border: 2px solid #333; /* Set the border properties */
+              border-radius: 10px;
+              background-color:rgb(236, 208, 171);
+        }
+    </style>
+</head>
+<body>
+    <form>
+        <h1 class="title">Speech to text converter</h1>
+        <textarea></textarea>
+        <button type="submit" class="btn">Speak!</button>
+        <button type="button" class="btn">Stop</button>
+    </form>
+    <script>
+        let form = document.querySelector("form");
+        let sr = window.webkitSpeechRecognition || window.SpeechRecognition;
+        let spRec = new sr();
+        spRec.lang = "hi";
+        spRec.continuous = true;
+        spRec.interimResults = true;
+        // console.log(spRec);
+        form.addEventListener("submit", e => {
+            e.preventDefault();
+            spRec.start();
+        })
+        spRec.onresult = res => {
+            let text = Array.from(res.results)
+                .map(r => r[0])
+                .map(txt => txt.transcript)
+                .join("");
+            form[0].value = text;
+            // console.log(text);
+        }
+        form[2].addEventListener("click", () => {
+            spRec.stop()
+        })
+    </script>
+</body>
+</html>
+
